@@ -1,0 +1,103 @@
+####################################################################################
+# 
+# APS Style
+# 
+# Del Mastro Group Publication Style Sheet
+# 
+# Last Updated: May 5th, 2015
+# 
+# NOTES:
+#   - Uncomment lines for non-default values.
+#   - Remember to call the axes command to change the bounding box
+# 
+# CHANGES:
+# 
+# fig_width_pt = 246.0                    # Get this from LaTeX using \showthe\columnwidth
+# inches_per_pt = 1.0/72.27               # Convert pt to inch
+# golden_mean = (sqrt(5.0)-1.0)/2.0       # Aesthetic ratio
+# fig_width = fig_width_pt*inches_per_pt  # width in inches
+# fig_height = fig_width*golden_mean      # height in inches
+# fig_size =  [fig_width,fig_height]
+# aps_fig_size =  [fig_width,fig_height]
+# 
+# aps = {'params': {'axes.labelsize': 10,
+#                   'font.size': 10,
+#                   'legend.fontsize': 10,
+#                   'xtick.labelsize': 8,
+#                   'ytick.labelsize': 8,
+#                   'font.serif': 'CMU Serif Roman',
+#                   'text.usetex': True,
+#                   'figure.figsize': aps_fig_size,
+#                   'xtick.major.size': 4,
+#                   'xtick.minor.size': 2,
+#                   'xtick.major.pad': 4,
+#                   'xtick.minor.pad': 4,
+#                   'ytick.major.size': 4,
+#                   'ytick.minor.size': 2,
+#                   'ytick.major.pad': 4,
+#                   'ytick.minor.pad': 4,
+#                   'legend.frameon': False},
+#                   'axes': [0.15,0.16,0.95-0.11,0.95-0.15]}
+# 
+####################################################################################
+
+### FONT
+font.size           : 10.0
+font.family         : serif
+font.serif          : CMU Serif Roman
+text.hinting        : auto
+text.hinting_factor : 8
+
+### LaTeX customizations. See http://www.scipy.org/Wiki/Cookbook/Matplotlib/UsingTex
+text.usetex         : True  # use latex for all text handling. The following fonts
+                              # are supported through the usual rc parameter settings:
+                              # new century schoolbook, bookman, times, palatino,
+                              # zapf chancery, charter, serif, sans-serif, helvetica,
+                              # avant garde, courier, monospace, computer modern roman,
+                              # computer modern sans serif, computer modern typewriter
+                              # If another font is desired which can loaded using the
+                              # LaTeX \usepackage command, please inquire at the
+                              # matplotlib mailing list
+
+### AXES
+axes.labelsize      : 10      # fontsize of the x any y labels
+axes.linewidth      : 1.0    # edge linewidth
+axes.labelpad       : 2.0
+
+### TICKS
+
+# see http://matplotlib.org/api/axis_api.html#matplotlib.axis.Tick
+xtick.major.size     : 4      # major tick size in points
+xtick.major.width    : 0.5      # major tick width in points
+xtick.minor.size     : 2      # minor tick size in points
+xtick.major.pad      : 4      # distance to major tick label in points
+xtick.minor.pad      : 4      # distance to the minor tick label in points
+xtick.labelsize      : 8      # fontsize of the tick labels
+xtick.top : True
+xtick.direction: in
+
+ytick.major.size     : 4      # major tick size in points
+ytick.major.width    : 0.5      # major tick width in points
+ytick.minor.size     : 2      # minor tick size in points
+ytick.major.pad      : 4      # distance to major tick label in points
+ytick.minor.pad      : 4      # distance to the minor tick label in points
+ytick.labelsize      : 8      # fontsize of the tick labels
+ytick.right : True
+ytick.direction: in
+
+### Legend
+legend.fontsize      : 10
+legend.frameon       : False   # whether or not to draw a frame around legend
+legend.labelspacing  : 0.25
+legend.handletextpad : 0.5
+
+### FIGURE
+# See http://matplotlib.org/api/figure_api.html#matplotlib.figure.Figure
+figure.figsize   : 3.4039, 2.10373    # figure size in inches
+
+savefig.transparent :  True     # transparent figures
+savefig.dpi         : 72.27     # figure dots per inch
+savefig.bbox        : tight     # 'tight' or 'standard'.
+savefig.pad_inches  : 0.05       # Padding to be used when bbox is set to 'tight'
+
+pdf.fonttype       : 42
