@@ -1,0 +1,5 @@
+# AsymptoticEigenvalues
+
+<img src="https://github.com/DelMaestroGroup/PartEntFermions/blob/master/DegeneracyEffect/degeneracyEffect.png?raw=true" width=300px>
+
+The spectrum of the correlation matrix <math>{\sf C}_A/<math> of free fermions calculated via exact diagonalization (empty circles) and from the asymptotic relation in Eq.~(\ref{eq:nu_asymptotic}) (filled circles) for <math>N=10^5</math> at half-filling with partition size <math>\ell=10^5</math>.  Insets: The corresponding number probability distribution <math>P_n</math> vs <math>n-\langle n \rangle/<math> on a linear (left) and log (right) scale.  The solid line shows a normal distribution <math>\mathcal{N}/<math> with the average <math>\langle n \rangle</math> and variance <math>\sigma^2</math> of <math>P_n</math> demonstrating its convergence but narrow width.
