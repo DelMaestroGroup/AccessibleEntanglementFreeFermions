@@ -3,7 +3,7 @@ Calculate both the spatial and the operational entanglement entropies of a
 region A, using the SVD. The latter is the "entanglement of particles"
 introduced by Wiseman and Vaccaro in 2003.
 """
-function operational_entanglement(L::Int, N::Int, l::Int, precision::Int, alpha::Float64, nu::Vector{Float64}; boundary::BdryCond=PBC)
+function operational_entanglement(L::Int, N::Int, l::Int, precision::Int, alpha::Float64, nu::Vector{Float64}, eigenvalues::Bool, probabilities::Bool)
 
     setprecision(precision)
 #set_bigfloat_precision(precision)
@@ -12,7 +12,7 @@ function operational_entanglement(L::Int, N::Int, l::Int, precision::Int, alpha:
     scaling_factor= BigFloat
     scaling_factor=10.0^300
     normsDim=l+1
-    P1 = zeros(BigFloat, 2)
+    #P1 = zeros(BigFloat, 2)
     PN_old = zeros(BigFloat, normsDim)
     PN_new = zeros(BigFloat, normsDim)
     if nu[1]>=0 && nu[1]<=1
@@ -51,7 +51,8 @@ function operational_entanglement(L::Int, N::Int, l::Int, precision::Int, alpha:
     PN_new/= scaling_factor
     err_PN = abs(sum(PN_new) - 1.0)
     if err_PN > 1e-12
-        warn(" probability distribution error_PN ", err_PN)
+        @warn("probability distribution error: $(err_PN)")
+
     end
 # =======================================================
 # =======================================================
@@ -125,7 +126,8 @@ function operational_entanglement(L::Int, N::Int, l::Int, precision::Int, alpha:
     end
     err_Salpha = abs(sum(Salpha_new) - exp(-1.0*Salpha_sp))/exp(-1.0*Salpha_sp)
     if err_Salpha > 1e-12
-        warn(" Salpha_op error", err_Salpha)
+        @warn("Salpha_op error: $(err_Salpha)")
+
     end
     Salpha_sp/=(alpha-1)
 # =======================================================
@@ -150,7 +152,8 @@ function operational_entanglement(L::Int, N::Int, l::Int, precision::Int, alpha:
 
     err_sigma2 = abs(sigma2_n_PN - sigma2_n)/sigma2_n
     if err_sigma2 > 1e-12
-        warn(" sigma2_n error",err_sigma2)
+        @warn("sigma2_n error: $(err_sigma2)")
+
     end
 # =======================================================
 
@@ -205,50 +208,52 @@ function operational_entanglement(L::Int, N::Int, l::Int, precision::Int, alpha:
 
 
 
+     if l==100
+        if probabilities
+           Output="L$(L)N$(N)l$(l)alpha$(alpha)Pn.dat"
+           open(Output, "w") do fp
+              write(fp, "# L=$(L), N=$(N), l=$(l), alpha=$(alpha) \n")
+              write(fp, "# ==============================================================================\n") 
+              write(fp, @sprintf "#%7s%24s%24s%24s\n" "n"  "P(n)" "P(n)^alpha"  "P(n)_alpha" )
 
-#    if l==100000
-        Output="$(boundary)L$(L)N$(N)l$(l)alpha$(alpha)Pn.dat"
-        open(Output, "w") do fp
-            write(fp, "# L=$(L), N=$(N),l=$(l),alpha=$(alpha) \n")
-            write(fp, "# ================================================================\n") 
-            write(fp, "# n  P(n) P(n)^alpha  P(n)_alpha \n")
-            sumPnalpha=0.0
-            sumPn_alpha=0.0
-            sumSalpha_new =sum(Salpha_new)
-            sumPN_newalpha =sum(PN_new.^alpha)
-            for i=1: normsDim
-               write(fp, @sprintf "%d %.15E %.15E %.15E \n" i-1    PN_new[i]  PN_new[i]^alpha/sumPN_newalpha Salpha_new[i]/sumSalpha_new)
-               sumPnalpha= sumPnalpha+PN_new[i]^alpha/sumPN_newalpha
-               sumPn_alpha= sumPn_alpha+Salpha_new[i]/sumSalpha_new
-            end
-            write(fp, "#$(sumPnalpha)  \n")
-            write(fp, "#$(sumPn_alpha)  \n")
-            flush(fp)
+              sumPnalpha=0.0
+              sumPn_alpha=0.0
+              sumSalpha_new =sum(Salpha_new)
+              sumPN_newalpha =sum(PN_new.^alpha)
+              for i=1: normsDim
+                 write(fp, @sprintf "%8s%24.12E%24.12E%24.12E\n" "$(i-1)"  PN_new[i]  PN_new[i]^alpha/sumPN_newalpha Salpha_new[i]/sumSalpha_new)
+                 sumPnalpha= sumPnalpha+PN_new[i]^alpha/sumPN_newalpha
+                 sumPn_alpha= sumPn_alpha+Salpha_new[i]/sumSalpha_new
+              end
+               write(fp, "#$(sumPnalpha)  \n")
+               write(fp, "#$(sumPn_alpha)  \n")
+               flush(fp)
+           end
         end
 
-
 #___________________________________________eigvals_______________________________________________
-        Outputn="$(boundary)L$(L)N$(N)l$(l)alpha$(alpha)eigvals.dat"
-        open(Outputn, "w") do fn
-            write(fn, "# L=$(L), N=$(N),l=$(l) \n")
-            write(fn, "# ================================================================\n") 
-            write(fn, "# n  nu  \n")
-            for i=1: normsDim-1
-               if nu[i]>=0 && nu[i]<=1
-                  nuVal=nu[i]
-               elseif nu[i]>1
-                  nuVal=1.0
-               else
-                  nuVal=0.0
-               end
-               write(fn, @sprintf "%d %.15E \n" i    nuVal)
-            end
-           flush(fn)
-
-       end
+        if eigenvalues
+           Outputn="L$(L)N$(N)l$(l)alpha$(alpha)eigvals.dat"
+           open(Outputn, "w") do fn
+              write(fn, "# L=$(L), N=$(N), l=$(l) \n")
+              write(fn, "# ===============================\n") 
+              write(fn, @sprintf "#%7s%24s\n" "n"  "nu" )
+              for i=1: normsDim-1
+                 if nu[i]>=0 && nu[i]<=1
+                    nuVal=nu[i]
+                 elseif nu[i]>1
+                    nuVal=1.0
+                 else
+                    nuVal=0.0
+                 end
+                 write(fn, @sprintf "%8s%24.12E\n" "$(i)"  nuVal)
+              end
+              flush(fn)
+           end
+        end
 #__________________________________________________________________________________________
 
- #   end
+     end
 
 
     S1_sp, S1_op, Salpha_sp, Salpha_op, sigma2_n,LogSumPNalpha,H4,H5,H6
