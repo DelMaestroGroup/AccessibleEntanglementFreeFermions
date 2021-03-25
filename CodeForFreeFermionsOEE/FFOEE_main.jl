@@ -70,7 +70,6 @@ add_arg_group(s, "BH parameters")
     "--prob"
         help = "report the particle-number probability distribution."
         action = :store_true
-
 end
 
 function main()
